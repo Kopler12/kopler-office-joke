@@ -13,20 +13,29 @@ JOKE = (
 )
 
 
+def validate(joke: str) -> str:
+    """The gate needs one line of under 200 characters; fail loudly otherwise."""
+    text = joke.strip()
+    if not text or "\n" in text or len(text) >= 200:
+        raise ValueError(f"joke must be one line under 200 characters, got {len(text)}")
+    return text
+
+
 def main() -> None:
+    joke = validate(JOKE)
     output_dir = "/output"
     try:
         os.makedirs(output_dir, exist_ok=True)
         path = os.path.join(output_dir, "entry.txt")
         with open(path, "w", encoding="utf-8") as handle:
-            handle.write(JOKE)
+            handle.write(joke)
     except OSError:
         # Local runs (no sandbox /output): write next to the program.
         path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "output", "entry.txt")
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as handle:
-            handle.write(JOKE)
-    print(f"wrote {len(JOKE)} characters to {path}")
+            handle.write(joke)
+    print(f"wrote {len(joke)} characters to {path}")
 
 
 if __name__ == "__main__":
